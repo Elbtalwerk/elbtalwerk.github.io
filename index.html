@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Elbtalwerk – Unabhängige Open-Source-Software, lokale Tools und OpenTTD-KIs von Kai Fischer." />
+  <meta name="author" content="Kai Fischer (Elbtalwerk)" />
+  <title>Elbtalwerk – Open-Source-Tools &amp; OpenTTD-KIs</title>
+  <style>
+    :root {
+      --bg: #0b1120;
+      --bg-elev: #111827;
+      --card: #131d31;
+      --card-hover: #18253f;
+      --border: #23324d;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-soft: rgba(56, 189, 248, 0.12);
+      --amber: #f59e0b;
+      --amber-soft: rgba(245, 158, 11, 0.14);
+      --green: #34d399;
+      --green-soft: rgba(52, 211, 153, 0.12);
+      --radius: 14px;
+      --maxw: 1080px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background:
+        radial-gradient(circle at 15% -10%, rgba(56, 189, 248, 0.12), transparent 42%),
+        radial-gradient(circle at 85% 0%, rgba(245, 158, 11, 0.08), transparent 36%),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      width: 100%;
+      max-width: var(--maxw);
+      margin: 0 auto;
+      padding: 0 1.25rem;
+    }
+
+    /* Header */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(11, 17, 32, 0.86);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      gap: 1rem;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.65rem;
+      font-weight: 800;
+      font-size: 1.05rem;
+      letter-spacing: 0.06em;
+      color: #f8fafc;
+      text-transform: uppercase;
+    }
+
+    .brand:hover {
+      text-decoration: none;
+    }
+
+    .brand-mark {
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      background: linear-gradient(135deg, #0284c7, #38bdf8);
+      color: #0b1120;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      font-size: 0.95rem;
+      box-shadow: 0 0 18px rgba(56, 189, 248, 0.25);
+    }
+
+    nav ul {
+      display: flex;
+      list-style: none;
+      gap: 1.25rem;
+      font-size: 0.92rem;
+    }
+
+    nav a {
+      color: var(--muted);
+      font-weight: 500;
+      transition: color 0.15s ease;
+    }
+
+    nav a:hover {
+      color: #f8fafc;
+      text-decoration: none;
+    }
+
+    /* Hero */
+    .hero {
+      padding: 4.5rem 0 3.25rem;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.78rem;
+      color: var(--accent);
+      background: var(--accent-soft);
+      border: 1px solid rgba(56, 189, 248, 0.28);
+      padding: 0.3rem 0.75rem;
+      border-radius: 999px;
+      margin-bottom: 1.25rem;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.1rem, 5vw, 3.2rem);
+      line-height: 1.12;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      color: #f8fafc;
+      max-width: 18ch;
+      margin-bottom: 1rem;
+    }
+
+    .hero p {
+      font-size: 1.08rem;
+      color: var(--muted);
+      max-width: 62ch;
+      margin-bottom: 1.8rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      padding: 0.68rem 1.15rem;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.92rem;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: #f8fafc;
+      transition: transform 0.12s ease, background 0.15s ease, border-color 0.15s ease;
+    }
+
+    .btn:hover {
+      text-decoration: none;
+      background: var(--card-hover);
+      border-color: #3b5278;
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #082032;
+      border-color: transparent;
+    }
+
+    .btn-primary:hover {
+      background: #7dd3fc;
+      color: #082032;
+      border-color: transparent;
+    }
+
+    /* Sections */
+    section {
+      padding: 2.5rem 0;
+    }
+
+    .section-head {
+      margin-bottom: 1.5rem;
+    }
+
+    .section-head h2 {
+      font-size: 1.55rem;
+      font-weight: 700;
+      color: #f8fafc;
+      letter-spacing: -0.015em;
+      margin-bottom: 0.35rem;
+    }
+
+    .section-head p {
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    /* Project Grid */
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 1.2rem;
+      transition: border-color 0.18s ease, transform 0.18s ease;
+    }
+
+    .card:hover {
+      border-color: #385078;
+      transform: translateY(-2px);
+    }
+
+    .card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 0.22rem 0.58rem;
+      border-radius: 999px;
+      border: 1px solid transparent;
+    }
+
+    .tag-blue {
+      color: #7dd3fc;
+      background: var(--accent-soft);
+      border-color: rgba(56, 189, 248, 0.25);
+    }
+
+    .tag-amber {
+      color: #fcd34d;
+      background: var(--amber-soft);
+      border-color: rgba(245, 158, 11, 0.28);
+    }
+
+    .tag-green {
+      color: #6ee7b7;
+      background: var(--green-soft);
+      border-color: rgba(52, 211, 153, 0.25);
+    }
+
+    .version {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .card h3 {
+      font-size: 1.22rem;
+      color: #f8fafc;
+      margin-bottom: 0.5rem;
+    }
+
+    .card p {
+      font-size: 0.93rem;
+      color: var(--muted);
+      margin-bottom: 0.9rem;
+    }
+
+    .features {
+      list-style: none;
+      display: grid;
+      gap: 0.35rem;
+      font-size: 0.86rem;
+      color: #cbd5e1;
+    }
+
+    .features li::before {
+      content: "▸";
+      color: var(--accent);
+      margin-right: 0.45rem;
+    }
+
+    .card-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      padding-top: 0.9rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .card-links .btn {
+      font-size: 0.84rem;
+      padding: 0.5rem 0.85rem;
+      border-radius: 8px;
+    }
+
+    /* Principles */
+    .pillars {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+    }
+
+    .pillar {
+      background: var(--bg-elev);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+    }
+
+    .pillar h3 {
+      font-size: 1rem;
+      color: #f8fafc;
+      margin-bottom: 0.35rem;
+    }
+
+    .pillar p {
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+
+    /* Contact & Legal */
+    .contact-box {
+      background: var(--bg-elev);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.6rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.25rem;
+    }
+
+    .contact-box h2 {
+      font-size: 1.25rem;
+      color: #f8fafc;
+      margin-bottom: 0.3rem;
+    }
+
+    .contact-box p {
+      color: var(--muted);
+      font-size: 0.92rem;
+      max-width: 55ch;
+    }
+
+    details {
+      margin-top: 1.25rem;
+      background: var(--bg-elev);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.95rem 1.2rem;
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+
+    summary {
+      cursor: pointer;
+      font-weight: 600;
+      color: #cbd5e1;
+      user-select: none;
+    }
+
+    details p {
+      margin-top: 0.65rem;
+    }
+
+    footer {
+      margin-top: 2.5rem;
+      border-top: 1px solid var(--border);
+      padding: 1.75rem 0 2.5rem;
+      font-size: 0.84rem;
+      color: var(--muted);
+    }
+
+    .footer-inner {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    @media (max-width: 600px) {
+      .hero {
+        padding: 3rem 0 2rem;
+      }
+      nav ul {
+        gap: 0.85rem;
+        font-size: 0.85rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <a class="brand" href="#top">
+        <span class="brand-mark" aria-hidden="true">EW</span>
+        <span>Elbtalwerk</span>
+      </a>
+      <nav aria-label="Hauptnavigation">
+        <ul>
+          <li><a href="#projekte">Projekte</a></li>
+          <li><a href="#prinzipien">Prinzipien</a></li>
+          <li><a href="#kontakt">Kontakt</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top" class="container">
+    <section class="hero">
+      <div class="eyebrow">Open Source · Lokal · Werbefrei</div>
+      <h1>Software aus dem Elbtalwerk.</h1>
+      <p>
+        Unabhängige Hobby- und Open-Source-Projekte von <strong>Kai Fischer</strong>:
+        praktische Werkzeuge ohne Cloud-Zwang und wirtschaftlich optimierte KI-Gegner für OpenTTD.
+      </p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#projekte">Projekte ansehen</a>
+        <a class="btn" href="https://github.com/Elbtalwerk" target="_blank" rel="noopener noreferrer">GitHub-Organisation</a>
+        <a class="btn" href="https://github.com/KaipirinhaReal" target="_blank" rel="noopener noreferrer">GitHub-Profil</a>
+      </div>
+    </section>
+
+    <section id="projekte">
+      <div class="section-head">
+        <h2>Projekte</h2>
+        <p>Alle Anwendungen sind kostenlos, quelloffen und frei nutzbar.</p>
+      </div>
+
+      <div class="grid-3">
+        <!-- Frost-Manager -->
+        <article class="card">
+          <div>
+            <div class="card-top">
+              <span class="tag tag-blue">Desktop &amp; Browser</span>
+              <span class="version">v1.0.0 · MIT</span>
+            </div>
+            <h3>Frost-Manager</h3>
+            <p>
+              Lokale Gefriertruhen- und Vorratsverwaltung für Windows und den Browser –
+              komplett ohne Cloud, Konto oder Abo.
+            </p>
+            <ul class="features">
+              <li>Mehrere Gefrierorte, Fächer &amp; Kategorien</li>
+              <li>Automatische MHD-Schätzung per Wissensdatenbank</li>
+              <li>DIN-A4-Magnetwand-Listen zum Ausdrucken</li>
+              <li>JSON-Backup &amp; Excel-/CSV-Export</li>
+            </ul>
+          </div>
+          <div class="card-links">
+            <a class="btn btn-primary" href="https://github.com/KaipirinhaReal/Frost-Manager/releases" target="_blank" rel="noopener noreferrer">Download (.exe)</a>
+            <a class="btn" href="https://github.com/KaipirinhaReal/Frost-Manager" target="_blank" rel="noopener noreferrer">Quellcode</a>
+          </div>
+        </article>
+
+        <!-- OmniYield -->
+        <article class="card">
+          <div>
+            <div class="card-top">
+              <span class="tag tag-amber">OpenTTD AI</span>
+              <span class="version">v15 · MIT</span>
+            </div>
+            <h3>OmniYield</h3>
+            <p>
+              Streng renditeorientierte Multi-Modal-KI für OpenTTD (OmniYield AG / Dr. Marge),
+              entwickelt für starke Konkurrenz gegen Spieler und Community-KIs.
+            </p>
+            <ul class="features">
+              <li>Zweigleis-PBS-Bahnstrecken, IC-Express &amp; Güterzüge</li>
+              <li>Automatische Gleis-Umrüstung bis Maglev</li>
+              <li>Flughafen-Hubs, Auto-Upgrades &amp; Bus-Zubringer</li>
+              <li>Kontrolliertes Terraforming &amp; Subventionsjagd</li>
+            </ul>
+          </div>
+          <div class="card-links">
+            <a class="btn btn-primary" href="https://bananas.openttd.org/package/ai/4f4d4e59" target="_blank" rel="noopener noreferrer">BaNaNaS-Paket</a>
+          </div>
+        </article>
+
+        <!-- KaipirinhaRailways -->
+        <article class="card">
+          <div>
+            <div class="card-top">
+              <span class="tag tag-green">OpenTTD AI</span>
+              <span class="version">v25 · GPL v2</span>
+            </div>
+            <h3>KaipirinhaRailways</h3>
+            <p>
+              Selbstoptimierende OpenTTD-KI für Schiene, Straße, Luft und Wasser.
+              Basiert auf SuperSimpleAI &amp; SimpleAI mit Strategie- und Lernmodulen.
+            </p>
+            <ul class="features">
+              <li>Bandit-Lernspeicher für Fracht &amp; Distanz</li>
+              <li>Überholgleis-Schienen, Fähren &amp; Frachtschiffe</li>
+              <li>Kredithebel, Stadtkampagnen &amp; Übernahmen</li>
+              <li>Endspielmodus &amp; Stagnations-Erkennung</li>
+            </ul>
+          </div>
+          <div class="card-links">
+            <a class="btn btn-primary" href="https://bananas.openttd.org/package/ai/4b505257" target="_blank" rel="noopener noreferrer">BaNaNaS-Paket</a>
+            <a class="btn" href="https://github.com/KaipirinhaReal/KaipirinhaRailways" target="_blank" rel="noopener noreferrer">Quellcode</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="prinzipien">
+      <div class="section-head">
+        <h2>Prinzipien</h2>
+        <p>Kleine Werkzeuge, die genau das tun, was sie sollen.</p>
+      </div>
+
+      <div class="pillars">
+        <div class="pillar">
+          <h3>Lokal statt Cloud</h3>
+          <p>Keine Zwangsregistrierung, keine laufenden Kosten und volle Kontrolle über die eigenen Daten.</p>
+        </div>
+        <div class="pillar">
+          <h3>Offen &amp; nachvollziehbar</h3>
+          <p>Quelloffene Lizenzen (MIT / GPL v2) machen den Code prüfbar, teilbar und dauerhaft nutzbar.</p>
+        </div>
+        <div class="pillar">
+          <h3>Ohne Tracking</h3>
+          <p>Diese Seite lädt keine externen Schriften, keine Werbenetzwerke und setzt keinerlei Cookies.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="kontakt">
+      <div class="contact-box">
+        <div>
+          <h2>Feedback, Ideen oder Bugreports?</h2>
+          <p>
+            Rückmeldungen, Verbesserungsvorschläge und Fehlerberichte zu allen Projekten sind jederzeit willkommen.
+          </p>
+        </div>
+        <a class="btn btn-primary" href="mailto:elbtalwerk.kontakt@gmx.de">elbtalwerk.kontakt@gmx.de</a>
+      </div>
+
+      <details>
+        <summary>Hinweise zu Datenschutz &amp; Projektangaben</summary>
+        <p>
+          <strong>Verantwortlich für diese nicht-kommerzielle Projektseite:</strong><br />
+          Kai Fischer (Elbtalwerk) · Kontakt: <a href="mailto:elbtalwerk.kontakt@gmx.de">elbtalwerk.kontakt@gmx.de</a>
+          <!-- Optional: Falls du eine vollständige Anschrift nach § 5 DDG angeben möchtest, hier ergänzen. -->
+        </p>
+        <p>
+          <strong>Datenschutz &amp; Hosting:</strong> Diese statische Website wird über <em>GitHub Pages</em>
+          (GitHub, Inc., USA) bereitgestellt. Beim Aufruf können durch den Hostinganbieter technisch notwendige
+          Server-Logdaten (z. B. IP-Adresse und Zeitpunkt des Abrufs) verarbeitet werden. Diese Seite selbst
+          verwendet keine Cookies, kein Tracking, keine Analyse-Tools und lädt keine externen Schriften oder Skripte.
+        </p>
+      </details>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <span>© 2026 Elbtalwerk · Kai Fischer</span>
+      <span>Statisch gehostet auf GitHub Pages · Kein Tracking, keine Cookies</span>
+    </div>
+  </footer>
+</body>
+</html>
